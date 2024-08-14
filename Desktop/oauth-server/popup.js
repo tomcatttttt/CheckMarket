@@ -1,3 +1,3 @@
-document.getElementById("loginButton").addEventListener("click", () => {
-    browser.runtime.sendMessage({ type: "login" });
+document.getElementById('login').addEventListener('click', () => {
+  browser.runtime.sendMessage({ action: 'login' });
 });
