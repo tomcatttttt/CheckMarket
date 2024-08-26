@@ -10,7 +10,8 @@
     "webRequestBlocking",
     "storage",
     "tabs",
-    "https://accounts.google.com/*"
+    "https://accounts.google.com/*",
+    "https://www.googleapis.com/*"
   ],
   "background": {
     "scripts": ["background.js"],
