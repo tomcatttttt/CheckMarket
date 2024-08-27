@@ -15,32 +15,36 @@ const redirectUri = 'https://polar-shore-05125-b49ae913d73c.herokuapp.com/oauth2
 
 let wsClient;
 
-// Обробка WebSocket з'єднання
+// Обработка WebSocket соединения
 wss.on('connection', (ws) => {
-  console.log('Client connected');
+  console.log('WebSocket: Client connected');
   wsClient = ws;
   
   ws.on('close', () => {
-    console.log('Client disconnected');
+    console.log('WebSocket: Client disconnected');
     wsClient = null;
   });
 });
 
-// Маршрут для початку авторизації
+// Маршрут для начала авторизации
 app.get('/oauth2/auth', (req, res) => {
+  console.log('Auth Route: Redirecting to Google Auth...');
   const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=https://www.googleapis.com/auth/calendar.readonly&access_type=offline&prompt=consent`;
   res.redirect(authUrl);
 });
 
-// Маршрут для обробки callback після авторизації
+// Маршрут для обработки callback после авторизации
 app.get('/oauth2/callback', async (req, res) => {
+  console.log('Callback Route: Authorization code received', req.query.code);
   const authCode = req.query.code;
 
   if (!authCode) {
+    console.error('Callback Route: Authorization failed, no code received');
     return res.status(400).send('Authorization failed or no code received.');
   }
 
   try {
+    console.log('Callback Route: Exchanging code for access token...');
     const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', querystring.stringify({
       code: authCode,
       client_id: clientId,
@@ -50,24 +54,30 @@ app.get('/oauth2/callback', async (req, res) => {
     }));
 
     const accessToken = tokenResponse.data.access_token;
+    console.log('Callback Route: Access token received:', accessToken);
 
-    // Відправка повідомлення розширенню через WebSocket
+    // Отправка токена в WebSocket клиент
     if (wsClient) {
+      console.log('WebSocket: Sending access token to client');
       wsClient.send(JSON.stringify({ action: 'login_success', token: accessToken }));
+    } else {
+      console.error('WebSocket: No WebSocket client connected to send token');
     }
 
     res.send(`
       <script>
+        console.log("Callback Route: Sending message to opener with access token...");
         window.opener.postMessage({ accessToken: "${accessToken}" }, "*");
         window.close();
       </script>
     `);
   } catch (error) {
-    console.error('Error exchanging code for token:', error.response ? error.response.data : error.message);
+    console.error('Callback Route: Error exchanging code for token:', error.response ? error.response.data : error.message);
     res.status(500).send('Failed to exchange code for access token.');
   }
 });
 
+// Запуск сервера
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

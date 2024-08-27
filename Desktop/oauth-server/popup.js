@@ -1,8 +1,13 @@
-// Встановлюємо WebSocket-з'єднання
+// Подключение к WebSocket серверу
 const socket = new WebSocket('wss://polar-shore-05125-b49ae913d73c.herokuapp.com');
 
-// Обробка повідомлень від сервера
+socket.onopen = function() {
+  console.log('WebSocket: Connection established');
+};
+
+// Обработка сообщений от WebSocket сервера
 socket.onmessage = function(event) {
+  console.log('WebSocket: Message received from server:', event.data);
   const message = JSON.parse(event.data);
 
   if (message.action === 'login_success') {
@@ -13,13 +18,15 @@ socket.onmessage = function(event) {
   }
 };
 
-// При натисканні на кнопку логіну ініціюємо процес авторизації
+// Обработка нажатия на кнопку логина
 document.getElementById('login').addEventListener('click', function() {
+  console.log('Extension: Starting login process...');
   browser.runtime.sendMessage({ action: 'login' });
 });
 
-// При натисканні на кнопку виходу
+// Обработка нажатия на кнопку выхода
 document.getElementById('logout').addEventListener('click', function() {
+  console.log('Extension: Logging out...');
   document.getElementById('login').style.display = 'block';
   document.getElementById('logout').style.display = 'none';
   document.getElementById('token').textContent = '';

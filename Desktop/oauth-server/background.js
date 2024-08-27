@@ -6,12 +6,12 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       interactive: true,
       url: authUrl
     }).then(responseUrl => {
-      console.log('Authorization in progress...');
+      console.log('Background: Authorization in progress...');
     }).catch(error => {
-      console.error('Authorization error:', error);
+      console.error('Background: Authorization error:', error);
       sendResponse({ success: false, error: error.message });
     });
 
-    return true; // Залишаємо порт відкритим для асинхронної відповіді
+    return true; // Оставляем порт открытым для асинхронного ответа
   }
 });
