@@ -1,36 +1,27 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const loginButton = document.getElementById('login');
-  const logoutButton = document.getElementById('logout');
-  const statusText = document.getElementById('status');
+// Встановлюємо WebSocket-з'єднання
+const socket = new WebSocket('wss://polar-shore-05125-b49ae913d73c.herokuapp.com');
 
-  // Перевіряємо, чи збережений токен
-  const accessToken = localStorage.getItem('accessToken');
-  if (accessToken) {
-    statusText.textContent = "You are logged in.";
-    loginButton.style.display = 'none';
-    logoutButton.style.display = 'block';
-  } else {
-    loginButton.style.display = 'block';
-    logoutButton.style.display = 'none';
+// Обробка повідомлень від сервера
+socket.onmessage = function(event) {
+  const message = JSON.parse(event.data);
+
+  if (message.action === 'login_success') {
+    document.getElementById('status').textContent = 'Login successful!';
+    document.getElementById('token').textContent = message.token;
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('logout').style.display = 'block';
   }
+};
 
-  loginButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'login' }, response => {
-      if (response.success) {
-        localStorage.setItem('accessToken', 'your_access_token'); // Замінити на реальний токен
-        statusText.textContent = "You are logged in.";
-        loginButton.style.display = 'none';
-        logoutButton.style.display = 'block';
-      } else {
-        statusText.textContent = `Login failed: ${response.error}`;
-      }
-    });
-  });
+// При натисканні на кнопку логіну ініціюємо процес авторизації
+document.getElementById('login').addEventListener('click', function() {
+  browser.runtime.sendMessage({ action: 'login' });
+});
 
-  logoutButton.addEventListener('click', () => {
-    localStorage.removeItem('accessToken');
-    statusText.textContent = "You are logged out.";
-    loginButton.style.display = 'block';
-    logoutButton.style.display = 'none';
-  });
+// При натисканні на кнопку виходу
+document.getElementById('logout').addEventListener('click', function() {
+  document.getElementById('login').style.display = 'block';
+  document.getElementById('logout').style.display = 'none';
+  document.getElementById('token').textContent = '';
+  document.getElementById('status').textContent = 'Logged out';
 });

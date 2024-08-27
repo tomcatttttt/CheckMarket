@@ -1,39 +1,18 @@
 {
   "manifest_version": 2,
-  "name": "OAuth Example Extension",
+  "name": "Google Calendar Auth",
   "version": "1.0",
-  "description": "Пример расширения для работы с OAuth 2.0 и Google.",
-  "permissions": [
-    "identity",
-    "identity.email",
-    "webRequest",
-    "webRequestBlocking",
-    "storage",
-    "tabs",
-    "https://accounts.google.com/*",
-    "https://www.googleapis.com/*"
-  ],
+  "description": "Authentication with Google Calendar API",
   "background": {
     "scripts": ["background.js"],
     "persistent": false
   },
   "browser_action": {
     "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
+    "default_title": "Google Calendar Auth"
   },
-  "applications": {
-    "gecko": {
-      "id": "your-extension-id@domain.com",
-      "strict_min_version": "42.0"
-    }
-  },
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  }
+  "permissions": [
+    "identity",
+    "https://*.herokuapp.com/"
+  ]
 }

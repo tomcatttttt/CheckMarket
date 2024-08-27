@@ -1,12 +1,30 @@
 const express = require('express');
 const axios = require('axios');
 const querystring = require('querystring');
+const http = require('http');
+const WebSocket = require('ws');
+
 const app = express();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 const port = process.env.PORT || 3000;
 
 const clientId = '1094772266793-03f0tvn4rrlerbod62n81fr6fjk8kbst.apps.googleusercontent.com';
 const clientSecret = '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';
 const redirectUri = 'https://polar-shore-05125-b49ae913d73c.herokuapp.com/oauth2/callback';
+
+let wsClient;
+
+// Обробка WebSocket з'єднання
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+  wsClient = ws;
+  
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    wsClient = null;
+  });
+});
 
 // Маршрут для початку авторизації
 app.get('/oauth2/auth', (req, res) => {
@@ -14,7 +32,7 @@ app.get('/oauth2/auth', (req, res) => {
   res.redirect(authUrl);
 });
 
-// Маршрут для обробки зворотного виклику після авторизації
+// Маршрут для обробки callback після авторизації
 app.get('/oauth2/callback', async (req, res) => {
   const authCode = req.query.code;
 
@@ -33,7 +51,11 @@ app.get('/oauth2/callback', async (req, res) => {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Закриваємо вікно авторизації і повертаємо токен
+    // Відправка повідомлення розширенню через WebSocket
+    if (wsClient) {
+      wsClient.send(JSON.stringify({ action: 'login_success', token: accessToken }));
+    }
+
     res.send(`
       <script>
         window.opener.postMessage({ accessToken: "${accessToken}" }, "*");
@@ -46,28 +68,6 @@ app.get('/oauth2/callback', async (req, res) => {
   }
 });
 
-// Маршрут для отримання подій з Google Calendar
-app.get('/calendar/events', async (req, res) => {
-  const accessToken = req.query.access_token;
-
-  if (!accessToken) {
-    return res.status(400).send('Access token is required.');
-  }
-
-  try {
-    const eventsResponse = await axios.get('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    res.json(eventsResponse.data);
-  } catch (error) {
-    console.error('Error fetching calendar events:', error.response ? error.response.data : error.message);
-    res.status(500).send('Failed to fetch calendar events.');
-  }
-});
-
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
