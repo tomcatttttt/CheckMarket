@@ -33,33 +33,23 @@ app.get('/oauth2/callback', async (req, res) => {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Теперь можно использовать accessToken для запросов к Google Calendar API
-    res.send(`Authorization successful! Access Token: ${accessToken}`);
+    // Відправка скрипту для закриття вкладки браузера
+    res.send(`
+      <html>
+        <body>
+          <script>
+            // Передаємо токен розширенню
+            window.opener.postMessage({ success: true, token: '${accessToken}' }, '*');
+            // Закриваємо вкладку
+            window.close();
+          </script>
+          <p>Authorization successful! This tab will close automatically.</p>
+        </body>
+      </html>
+    `);
   } catch (error) {
     console.error('Error exchanging code for token:', error);
     res.status(500).send('Failed to exchange code for access token.');
-  }
-});
-
-// Маршрут для получения событий из Google Calendar
-app.get('/calendar/events', async (req, res) => {
-  const accessToken = req.query.access_token;
-
-  if (!accessToken) {
-    return res.status(400).send('Access token is required.');
-  }
-
-  try {
-    const eventsResponse = await axios.get('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    res.json(eventsResponse.data);
-  } catch (error) {
-    console.error('Error fetching calendar events:', error);
-    res.status(500).send('Failed to fetch calendar events.');
   }
 });
 
