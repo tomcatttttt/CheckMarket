@@ -1,3 +1,20 @@
+const express = require('express');
+const axios = require('axios');
+const querystring = require('querystring');
+const app = express();
+const port = process.env.PORT || 3000;
+
+const clientId = '1094772266793-03f0tvn4rrlerbod62n81fr6fjk8kbst.apps.googleusercontent.com';  
+const clientSecret = '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';  
+const redirectUri = 'https://polar-shore-05125-b49ae913d73c.herokuapp.com/oauth2/callback';
+
+// Маршрут для початку авторизації
+app.get('/oauth2/auth', (req, res) => {
+  const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=https://www.googleapis.com/auth/calendar.readonly`;
+  res.redirect(authUrl);
+});
+
+// Маршрут для обробки зворотного виклику після авторизації
 app.get('/oauth2/callback', async (req, res) => {
   const authCode = req.query.code;
 
@@ -26,4 +43,8 @@ app.get('/oauth2/callback', async (req, res) => {
   } catch (error) {
     res.status(500).send('Failed to exchange code for access token.');
   }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
