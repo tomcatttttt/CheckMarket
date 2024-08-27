@@ -1,34 +1,27 @@
-// Подключение к WebSocket серверу
+// Встановлюємо WebSocket-з'єднання
 const socket = new WebSocket('wss://polar-shore-05125-b49ae913d73c.herokuapp.com');
 
-socket.onopen = function() {
-  console.log('WebSocket: Connection established');
-};
-
-// Обработка сообщений от WebSocket сервера
+// Обробка повідомлень від сервера
 socket.onmessage = function(event) {
-  console.log('WebSocket: Message received from server:', event.data);
-  const message = JSON.parse(event.data);
+    const message = JSON.parse(event.data);
 
-  if (message.action === 'login_success') {
-    document.getElementById('status').textContent = 'Login successful!';
-    document.getElementById('token').textContent = message.token;
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('logout').style.display = 'block';
-  }
+    if (message.action === 'login_success') {
+        document.getElementById('status').textContent = 'Login successful!';
+        document.getElementById('token').textContent = message.token;
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('logout').style.display = 'block';
+    }
 };
 
-// Обработка нажатия на кнопку логина
+// При натисканні на кнопку логіну ініціюємо процес авторизації
 document.getElementById('login').addEventListener('click', function() {
-  console.log('Extension: Starting login process...');
-  browser.runtime.sendMessage({ action: 'login' });
+    browser.runtime.sendMessage({ action: 'login' });
 });
 
-// Обработка нажатия на кнопку выхода
+// При натисканні на кнопку виходу
 document.getElementById('logout').addEventListener('click', function() {
-  console.log('Extension: Logging out...');
-  document.getElementById('login').style.display = 'block';
-  document.getElementById('logout').style.display = 'none';
-  document.getElementById('token').textContent = '';
-  document.getElementById('status').textContent = 'Logged out';
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('logout').style.display = 'none';
+    document.getElementById('token').textContent = '';
+    document.getElementById('status').textContent = 'Logged out';
 });
