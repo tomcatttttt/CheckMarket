@@ -23,6 +23,7 @@ wss.on('connection', (ws) => {
 
     // Якщо токен вже є, відправляємо його клієнту
     if (storedToken) {
+        console.log('WebSocket: Sending stored token to client');
         wsClient.send(JSON.stringify({ action: 'login_success', token: storedToken }));
         storedToken = null; // очищаємо збережений токен після відправлення
     }
@@ -45,10 +46,11 @@ app.get('/oauth2/callback', async (req, res) => {
     const authCode = req.query.code;
 
     if (!authCode) {
+        console.log('Callback Route: Authorization failed or no code received');
         return res.status(400).send('Authorization failed or no code received.');
     }
 
-    console.log('Callback Route: Authorization code received', authCode);
+    console.log('Callback Route: Authorization code received:', authCode);
     console.log('Callback Route: Exchanging code for access token...');
 
     try {
@@ -65,6 +67,7 @@ app.get('/oauth2/callback', async (req, res) => {
 
         // Відправка повідомлення розширенню через WebSocket
         if (wsClient) {
+            console.log('WebSocket: Sending access token to client');
             wsClient.send(JSON.stringify({ action: 'login_success', token: accessToken }));
         } else {
             console.log('WebSocket: No WebSocket client connected to send token, saving it for later.');
@@ -73,6 +76,7 @@ app.get('/oauth2/callback', async (req, res) => {
 
         res.send(`
             <script>
+                console.log('Callback Route: Sending token to opener');
                 window.opener.postMessage({ accessToken: "${accessToken}" }, "*");
                 window.close();
             </script>

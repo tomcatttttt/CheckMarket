@@ -1,0 +1,574 @@
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    border-radius: 24px;
+    font-family: 'Inter', sans-serif;
+}
+
+.container {
+    background-color: white;
+    padding: 32px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 480px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.header a {
+    color: #00A97B;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.header h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.login h2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#login {
+    padding: 12px 24px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+#logout {
+    width: 100%; /* Изменено на 100%, чтобы кнопка заполняла ширину контейнера */
+    max-width: 200px; /* Ограничиваем максимальную ширину кнопки */
+    padding: 12px 24px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-left: auto; /* Добавлено для выравнивания кнопки справа */
+}
+
+#login h3, #logout h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.from, .to {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+h1, h2 {
+    color: #333;
+    margin: 0;
+}
+
+.calculate {
+    background-color: #00A97B;
+    color: white;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 24px;
+    border: 1px solid #00A97B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.calculate h3 {
+    margin: 0;
+}
+
+button {
+    background-color: white;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border: none;
+    border: 1px solid #00A97B;
+}
+
+.logout-button {
+    display: flex;
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+input[type="text"], input[type="time"] {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ADE2D4;
+    color: #333;
+    position: relative;
+}
+
+input[type="text"]:focus, input[type="time"]:focus {
+    outline: none;
+    border-color: #ADE2D4;
+    background-color: #fff;
+}
+
+.custom-date-picker:hover .icon-input,
+.custom-time-input:hover .icon-input {
+    box-shadow: 0px 0px 8px 3px rgba(0, 169, 123, 0.5);
+    border-radius: 50%;
+}
+
+.icon-input {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+}
+
+#calculateForm input[disabled] {
+    border-color: #1D2926;
+    color: #1D2926;
+}
+
+#resultBlock {
+    display: none;
+}
+
+#resultBlock h3 {
+    margin-top: 0;
+    order: 1;
+}
+
+#resultBlock p {
+    margin-bottom: 0;
+    order: 2;
+}
+
+#calculateForm input[type="text"].prevent-style-change,
+#calculateForm input[type="time"].prevent-style-change {
+    border-color: #ADE2D4 !important;
+}
+
+.flex-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: #E0F8F1;
+    margin: 12px;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.tabs {
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 16px; /* Пространство между табами и контентом */
+}
+
+.tab {
+    color: black;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    transition: color 0.3s ease;
+}
+
+.tab.active {
+    border-bottom: 2px solid #00A97B; /* Линия активного таба */
+    color: #00A97B;
+}
+
+.tabContainer {
+    display: none;
+}
+
+.tabContainer.showTabs {
+    display: flex;
+    padding-bottom: 16px;
+}
+
+#textInput {
+    display: none;
+    background-color: #E0F8F1;
+    padding: 12px 16px;
+}
+
+#text {
+    display: block;
+}
+
+.tab:not(.active) .active {
+    display: none;
+}
+
+.tab.active .inactive {
+    display: none;
+}
+
+.privacy, .history, .report {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.privacy a, .history a, .report a {
+    text-decoration: none;
+    color: #00A97B;
+}
+
+.privacy h3, .history h3, .report h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.privacy p, .history p, .report p {
+    color: #45504D;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+#privacyPage div {
+    margin-bottom: 8px;
+}
+
+#privacyPage b {
+    font-size: 13px;
+}
+
+#privacyPage a {
+    text-decoration: none;
+}
+
+#privacyPage div div {
+    text-align: justify;
+}
+
+.history-item {
+    cursor: pointer;
+    padding: 5px;
+}
+
+.history-item:hover {
+    background-color: #f0f0f0;
+}
+
+.histInner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.blockContent {
+    display: flex;
+    justify-content: space-between;
+}
+
+.selectedRange {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+}
+
+.selectedRange span {
+    width: 50%;
+    padding-top: 10px;
+}
+
+.selectedRange p {
+    width: 100%;
+}
+
+.custom-date-picker {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.date-picker-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.month-selector,
+.year-selector {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    background-color: white;
+    padding: 0 5px;
+}
+
+.month-selector select,
+.year-selector select {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+}
+
+.date-picker-header button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.month-year-display {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.calendar {
+    position: absolute;
+    top: 85%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ADE2D4;
+    border-radius: 8px;
+    padding: 12px 12px 0 12px;
+    display: none;
+    z-index: 999;
+    width: 89%;
+}
+
+.calendar.visible {
+    display: block;
+}
+
+.calendar-body {
+    margin-top: 10px;
+}
+
+.calendar table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+}
+
+.calendar th,
+.calendar td {
+    text-align: center;
+    border: none;
+}
+
+tbody {
+    border-bottom: 1px solid #00A97B;
+}
+
+.calendar th {
+    background-color: white;
+    color: #1D2926;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.calendar td {
+    background-color: white;
+    color: #1D2926;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.calendar td:hover {
+    background-color: #00A97B;
+    border-radius: 50%;
+    margin: 0;
+    padding: 0;
+}
+
+#monthSelector {
+    color: #1D2926;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.1px;
+}
+
+.button-container {
+    display: flex;
+    padding: 12px 0 12px 0;
+}
+
+.button-calendar-clear {
+    border: none;
+    color: #FF6E6E;
+    margin: 0;
+    padding: 0;
+}
+
+.button-calendar-today {
+    border: none;
+    color: #00A97B;
+    margin: 0;
+    padding: 0;
+}
+
+.custom-time-input {
+    position: relative;
+}
+
+.custom-time-input .selected {
+    background: #cccccc;
+}
+
+.custom-time-input.to .time-select,
+.custom-time-input.from .time-select {
+    display: none;
+    position: relative;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ADE2D4;
+    width: 90px;
+    padding: 12px 8px;
+    border-radius: 8px;
+}
+
+.custom-time-input #time_from_formate, 
+.custom-time-input #time_to_formate {
+    position: absolute;
+    right: 3rem;
+    bottom: 1.1rem;
+    border: 0;
+    outline: none;
+}
+
+.time-select span.selected,
+.time-select span:hover {
+    background-color: #ADE2D4;
+    cursor: pointer;
+}
+
+.drop-time {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    position: absolute;
+    top: 50px;
+    z-index: 1;
+}
+
+.custom-time-input .time-select span {
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    text-align: center;
+    padding: 3px 0;
+    border-radius: 4px;
+}
+
+.custom-time-input.open .time-select {
+    display: block;
+}
+
+#copyButton:hover {
+    content: url('./asssets/icon-copy-hover.png');
+}
+
+.empty-cell {
+    pointer-events: none;
+}
+
+.tabContainer {
+    display: none;
+}
+
+.tabContainer.showTabs {
+    display: block;
+    padding-bottom: 16px;
+}
+
+.tab-content {
+    display: none;
+    background-color: #E0F8F1;
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+#listOutput {
+    display: none;
+}
+
+#listOutput.active {
+    display: block;
+    background-color: #E0F8F1;
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+#textInput.active {
+    display: block;
+}
